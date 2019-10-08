@@ -19,21 +19,12 @@ add_custom_command(
         COMMAND   reflex --bison-cc --bison-locations --header-file ${CMAKE_CURRENT_SOURCE_DIR}/quack.lxx
         DEPENDS quack.lxx quack.tab.hxx
 )
-add_custom_command(
-        OUTPUT quack.tab.cxx quack.tab.hxx location.hh position.hh stack.hh
-        COMMAND bison -d ${CMAKE_CURRENT_SOURCE_DIR}/quack.yxx
-        DEPENDS quack.yxx
-)
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
         ${REFLEX_INCLUDE}
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
-add_executable(parser
-        quack.tab.cxx lex.yy.cpp lex.yy.h
-        parser.cpp ASTNode.cpp ASTNode.h Messages.h Messages.cpp )
 
 add_executable(lexer
         lex_driver.cpp
@@ -44,5 +35,4 @@ add_executable(lexer
         names.h)
 
 
-target_link_libraries(parser ${REFLEX_LIB})
 target_link_libraries(lexer ${REFLEX_LIB})

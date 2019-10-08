@@ -1,29 +1,12 @@
-#
-# Makefile for building scanner.  You may prefer to use cmake, especially
-# if you use CLion.  I don't know cmake well enough to give you a good
-# portable CMakelists.txt
-#
-# Local tool paths and commands  (Varies by installation)
-CCOPTS = -L /usr/local/lib
-# REFLEX_LIB = /usr/local/lib/libreflex.a
-REFLEX_INCLUDE = /usr/local/include/reflex
-REFLEX = reflex
-CC = clang++ -std=c++11 -stdlib=libc++ 
+# The main Makefile is in the src directory
 
-default: lexer
+all:	
+	echo "Building in src directory, product will go to bin directory"
+	(cd src; make lexer;)
 
-%.o: %.cpp lex.yy.h
-	$(CC) -c -I $(REFLEX_INCLUDE) $^
+# Docker image.  Do this on your workstation platform (laptop, etc),
+# not from within docker.
 
-lex.yy.cpp lex.yy.h:	quack.lxx  quack.tab.hxx
-	$(REFLEX) --bison-cc --bison-locations --header-file quack.lxx
-
-lexer:  lex_driver.o  lex.yy.o ASTNode.o  Messages.o
-	$(CC) $(CCOPTS) -o lexer -l reflex $^
-
-# There should be more dependencies for the header files, but I'm lazy.
-
-clean:
-	rm -f *.o
-	rm -f lex.yy.cpp lex.yy.h
-
+image:
+	(cd src; make clean;)
+	docker build --tag=proj1 .
